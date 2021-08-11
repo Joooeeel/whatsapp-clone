@@ -1,10 +1,27 @@
+import { useState } from 'react';
 import './chat.css';
 import { Avatar, IconButton } from '@material-ui/core';
 import { AttachFile, MoreVert, SearchOutlined, InsertEmoticon, Mic } from '@material-ui/icons';
-
+import axios from '../../services'
 import ChatMsg from './msg'
 
-export default () => {
+
+export default ({ msg }) => {
+
+    const [inputMsg, setInputMsg] = useState('');
+
+    const sendMsg = async (e) => {
+        e.preventDefault();
+
+        await axios.post('/messages/new', {
+            msg: inputMsg,
+            name: "Testing",
+            timestamp: new Date().getUTCDate(),
+            received: false
+        })
+
+        setInputMsg('')
+    }
     return (
         <div className='chat'>
             <div className="chat-header">
@@ -26,17 +43,26 @@ export default () => {
                 </div>
             </div>
             <div className="chat-body">
-                <ChatMsg />
-                <ChatMsg sender="chat-reciver" />
-                <ChatMsg />
+                {msg.map((msg, key) => {
+                    return <ChatMsg key={key} data={msg} />
+                })}
             </div>
             <div className="chat-footer">
                 <IconButton>
                     <InsertEmoticon />
                 </IconButton>
                 <form>
-                    <input placeholder="Escribe tu mensaje" type="text" />
-                    <button type="submit"> Enviar mensaje</button>
+                    <input
+                        value={inputMsg}
+                        onChange={e => setInputMsg(e.target.value)}
+                        placeholder="Escribe tu mensaje"
+                        type="text" />
+
+                    <button
+                        onClick={sendMsg}
+                        type="submit">
+                        Enviar mensaje
+                    </button>
                 </form>
                 <IconButton>
                     <Mic />

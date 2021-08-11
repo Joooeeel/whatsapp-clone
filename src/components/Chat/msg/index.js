@@ -1,13 +1,13 @@
 import './msg.css'
 
-export default ({ sender }) => {
+export default ({ data }) => {
     return (
-        <p className={`chat-msg ${sender}`}>
-            <span className="chat-name">Tiny</span>
+        <p className={`chat-msg ${!data.received && 'chat-sender'}`}>
+            <span className="chat-name">{data.name}</span>
 
-            This is a message
+            {data.msg}
 
-            <span className="chat-timestamp">{new Date().toUTCString()}</span>
+            <span className="chat-timestamp">{data.timestamp}</span>
         </p>
     )
 }
